@@ -1,5 +1,7 @@
 const Joi = require('joi');
 
+
+// Sign up validation
 const signupSchema = Joi.object({
     username: Joi.string().required(),
     fullName: Joi.string().required(),
@@ -25,9 +27,32 @@ const validateSignupMiddleware = (req, res, next) => {
     }
   };
 
+  //Login validation Data
+  const loginSchema = Joi.object({
+    username: Joi.string(),
+    email: Joi.string(),
+    password: Joi.string().min(8).required(),
+  }).or("email", "username");
+
+  const validateLoginMiddleware = (req, res, next) => {
+    try {
+      let { error, value } = loginSchema.validate(req.body);
+      if (error) {
+        return res.status(400).json({
+          message: error,
+        });
+      }
+      next();
+    } catch (err) {
+      return res.status(500).json({
+        message: "server issues",
+      });
+    }
+  };
+
 
 
   module.exports = {
-
+    validateLoginMiddleware,
     validateSignupMiddleware
   }

@@ -34,6 +34,9 @@ app.get("/auth/google",  getGoogleLogin);
 app.get("/auth/google/callback", handleGoogleLogin);
 
 // profile route after successful sign in
-
+app.get("/profile", (req, res) => {
+  console.log(req);
+  res.send("Welcome");
+});
 
 app.listen(port, appStarter(port));

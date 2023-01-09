@@ -1,8 +1,9 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
 const JWT = require("jsonwebtoken");
 
-const userSchema = Schema(
+const userSchema =new mongoose.Schema(
   {
     google: {
       id: {
@@ -42,7 +43,7 @@ userSchema.pre("save", function () {
  }
 });
 
-userSchema.method("generateToken", () => {
+userSchema.method("generateToken", function() {
   let token = JWT.sign(
     {
       _id: this._id,

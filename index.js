@@ -5,10 +5,15 @@ const passport = require("passport");
 const {
   validateSignupMiddleware,
   validateLoginMiddleware,
+  validatePasswordChangeMiddleware,
 } = require("./controllers/validators/auth.validation");
 const { appStarter } = require("./utils");
 const { getGoogleLogin, handleGoogleLogin } = require("./controllers/google.auth");
 require("./controllers/google.auth");
+const { appendFile } = require("fs");
+const path = require("path");
+const { changePasswordController } = require("./controllers/auth.controller");
+const { verifyToken } = require("./controllers/middlewares");
 
 const app = express();
 const port = process.env.PORT;
@@ -22,6 +27,7 @@ app.get("/", indexController);
 
 app.post("/signup", validateSignupMiddleware, authController.signupController);
 app.post("/login", validateLoginMiddleware, authController.loginController);
+app.put("/password",validatePasswordChangeMiddleware,verifyToken,changePasswordController)
 
 // Google Authentication
 

@@ -51,8 +51,34 @@ const validateSignupMiddleware = (req, res, next) => {
   };
 
 
+  //Password change validation
+
+  const passwordChangeSchema = Joi.object({
+    oldPassword: Joi.string().min(8).required(),
+    password: Joi.string().min(8).required(),
+  });
+
+  const validatePasswordChangeMiddleware = (req, res, next) => {
+    try {
+      let { error, value } = passwordChangeSchema.validate(req.body);
+      if (error) {
+        return res.status(400).json({
+          message: error,
+        });
+      }
+      console.log(value);
+      next();
+    } catch (err) {
+      return res.status(500).json({
+        message: "server issues",
+      });
+    }
+  };
+
+
 
   module.exports = {
     validateLoginMiddleware,
-    validateSignupMiddleware
+    validateSignupMiddleware,
+    validatePasswordChangeMiddleware
   }

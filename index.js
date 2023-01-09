@@ -13,7 +13,9 @@ require("./controllers/google.auth");
 const { appendFile } = require("fs");
 const path = require("path");
 const { changePasswordController } = require("./controllers/auth.controller");
-const { verifyToken } = require("./controllers/middlewares");
+const { verifyToken, checkIfAdmin } = require("./controllers/middlewares");
+const { fetchAllBooks, addBookController } = require("./controllers/book.controller");
+const { seedSuperAdmin } = require("./controllers/seed");
 
 const app = express();
 const port = process.env.PORT;
@@ -28,6 +30,7 @@ app.get("/", indexController);
 app.post("/signup", validateSignupMiddleware, authController.signupController);
 app.post("/login", validateLoginMiddleware, authController.loginController);
 app.put("/password",validatePasswordChangeMiddleware,verifyToken,changePasswordController)
+
 
 // Google Authentication
 
@@ -44,5 +47,9 @@ app.get("/profile", (req, res) => {
   console.log(req);
   res.send("Welcome");
 });
+
+
+app.get("/books", fetchAllBooks);
+app.post("/books", checkIfAdmin, addBookController);
 
 app.listen(port, appStarter(port));

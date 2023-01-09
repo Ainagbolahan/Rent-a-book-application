@@ -11,7 +11,7 @@ const verifyToken = (req, res, next) => {
     }
     const token = longToken.split(" ")[1];
     let user = JWT.verify(token, process.env.JWT_SECRET);
-    // console.log(user);
+    console.log(req.user);
     req.user = user;
        console.log(user);
     next();

@@ -13,9 +13,9 @@ const seedSuperAdmin = async () => {
         seededAdmin = await User({
             isAdmin: true,
             password: process.env.ADMINPASSWORD,
-            username: "Admin1",
-            email: "superadmingee@gmail.com",
-            fullName: "Admin Owner",
+            username: process.env.SUPERADMINUSERNAME,
+            email: process.env.SUPERADMINEMAIL,
+            fullName: process.env.SUPERADMINFULLNAME,
             phone: "String",
             
         });

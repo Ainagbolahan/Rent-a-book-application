@@ -5,10 +5,18 @@ const passport = require("passport");
 const {
   validateSignupMiddleware,
   validateLoginMiddleware,
+  validatePasswordChangeMiddleware,
 } = require("./controllers/validators/auth.validation");
 const { appStarter } = require("./utils");
 const { getGoogleLogin, handleGoogleLogin } = require("./controllers/google.auth");
 require("./controllers/google.auth");
+const { appendFile } = require("fs");
+const path = require("path");
+const { changePasswordController } = require("./controllers/auth.controller");
+const { verifyToken, checkIfAdmin } = require("./controllers/middlewares");
+const { fetchAllBooks, addBookController, findByNameController, updateBooksController } = require("./controllers/book.controller");
+const { seedSuperAdmin } = require("./controllers/seed");
+const { validatecreateBooksChangeSchema, validateupdateBooksChangeSchema } = require("./controllers/validators/books.validation");
 
 const app = express();
 const port = process.env.PORT;
@@ -22,6 +30,8 @@ app.get("/", indexController);
 
 app.post("/signup", validateSignupMiddleware, authController.signupController);
 app.post("/login", validateLoginMiddleware, authController.loginController);
+app.put("/password",validatePasswordChangeMiddleware,verifyToken,changePasswordController)
+
 
 // Google Authentication
 
@@ -38,5 +48,14 @@ app.get("/profile", (req, res) => {
   console.log(req);
   res.send("Welcome");
 });
+
+
+app.get("/books", fetchAllBooks);
+app.post("/books",validatecreateBooksChangeSchema ,checkIfAdmin, addBookController);
+app.get("/books/:title", verifyToken, findByNameController);
+app.put("/books", checkIfAdmin, validateupdateBooksChangeSchema,updateBooksController);
+
+
+
 
 app.listen(port, appStarter(port));

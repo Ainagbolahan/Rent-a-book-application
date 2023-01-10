@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 mongoose.set('strictQuery', false);
 
 const connectToDb = async ()=>{
     try{
-        await mongoose.connect('mongodb://localhost:27017/rent-book');
+        await mongoose.connect(process.env.DB_URL);
         console.log("connected to DB");
     }
     catch(err){
@@ -18,5 +18,6 @@ const appStarter = (port)=>{
 };
 
 module.exports = {
-    appStarter
+    appStarter,
+    connectToDb
 }

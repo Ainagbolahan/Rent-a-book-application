@@ -24,8 +24,8 @@ passport.use(
         }
         // if user does not exist create a new user
         console.log("Creating new user...");
-        console.log(profile);
-        console.log(profile.emails);
+        // console.log(profile);
+        // console.log(profile.emails);
         
         const newUser = new User({
           method: "google",

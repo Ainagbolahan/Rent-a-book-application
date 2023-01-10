@@ -2,7 +2,7 @@ const JWT = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
   try {
-    console.log(req.headers);
+    // console.log(req.headers);
     const longToken = req.headers.authorization;
     if (!longToken) {
       return res.status(401).json({
@@ -11,9 +11,9 @@ const verifyToken = (req, res, next) => {
     }
     const token = longToken.split(" ")[1];
     let user = JWT.verify(token, process.env.JWT_SECRET);
-    console.log(req.user);
+    // console.log(req.user);
     req.user = user;
-       console.log(user);
+      //  console.log(user);
     next();
   } catch (err) {
     return res.status(401).json({

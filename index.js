@@ -14,8 +14,9 @@ const { appendFile } = require("fs");
 const path = require("path");
 const { changePasswordController } = require("./controllers/auth.controller");
 const { verifyToken, checkIfAdmin } = require("./controllers/middlewares");
-const { fetchAllBooks, addBookController } = require("./controllers/book.controller");
+const { fetchAllBooks, addBookController, findByNameController, updateBooksController } = require("./controllers/book.controller");
 const { seedSuperAdmin } = require("./controllers/seed");
+const { validatecreateBooksChangeSchema, validateupdateBooksChangeSchema } = require("./controllers/validators/books.validation");
 
 const app = express();
 const port = process.env.PORT;
@@ -50,6 +51,11 @@ app.get("/profile", (req, res) => {
 
 
 app.get("/books", fetchAllBooks);
-app.post("/books", checkIfAdmin, addBookController);
+app.post("/books",validatecreateBooksChangeSchema ,checkIfAdmin, addBookController);
+app.get("/books/:title", verifyToken, findByNameController);
+app.put("/books", checkIfAdmin, validateupdateBooksChangeSchema,updateBooksController);
+
+
+
 
 app.listen(port, appStarter(port));

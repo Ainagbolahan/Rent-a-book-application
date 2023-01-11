@@ -20,12 +20,14 @@ passport.use(
         let existingUser = await User.findOne({ "google.id": profile.id });
         // if user exists return the user
         if (existingUser) {
+
+         
           return done(null, existingUser);
         }
         // if user does not exist create a new user
         console.log("Creating new user...");
         // console.log(profile);
-        // console.log(profile.emails);
+        console.log(profile.emails);
         
         const newUser = new User({
           method: "google",

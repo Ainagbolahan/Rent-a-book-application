@@ -4,12 +4,17 @@ const { User } = require("../models/user.model");
 
 const addBookController = async (req, res) => {
     try {
-        const { title, price, description,  } = req.body;
+        const { title, price, description, } = req.body;
+        
+       
 
         if (!title && price && description)
         return res.status(400).json({
           message: "Title, Price and description is required",
         });
+
+
+
       let book = await Book.create(req.body);
       return res.status(201).json({
         message: "Book created",
@@ -86,11 +91,35 @@ const updateBooksController = async (req, res) => {
         return res.status(500).json("server issues");
     }
 }
+
+
+const findRandomBookController = async(req, res) => {
+    try {
+
+        const foundSearch = await Book.find({ $text: { $search: req.body.search } });
+        if (!foundSearch) {
+            return res.status(400).json({
+                message: "Book requested not found",
+            }); 
+        }
+
+        return  res.status(200).json({
+            message: "Book requested  found",
+            data: foundSearch
+        });
+
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json("server issues");
+    }
+}
   
 module.exports = {
     fetchAllBooks,
     addBookController,
     findByNameController,
-updateBooksController 
+    updateBooksController,
+findRandomBookController
 
 }

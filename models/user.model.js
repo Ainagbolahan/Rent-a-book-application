@@ -5,7 +5,7 @@ const JWT = require("jsonwebtoken");
 const userSchema =new Schema(
   {
     google: {
-      id: {
+      googleid: {
         type: String,
       },
       name: {
@@ -41,6 +41,15 @@ userSchema.pre("save", function () {
     this.password = hash;
  }
 });
+
+
+
+// userSchema.pre("save", function () {
+//   const salt = bcrypt.genSaltSync(10);
+//   const hash = bcrypt.hashSync(this.password, salt);
+//   this.password = hash
+// });
+
 
 userSchema.method("generateToken", function() {
   let token = JWT.sign(

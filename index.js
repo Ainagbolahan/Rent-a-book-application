@@ -3,9 +3,9 @@ const express = require("express");
 const { indexController, authController } = require("./controllers");
 const passport = require("passport");
 const {
-  validateSignupMiddleware,
-  validateLoginMiddleware,
-  validatePasswordChangeMiddleware,
+	validateSignupMiddleware,
+	validateLoginMiddleware,
+	validatePasswordChangeMiddleware,
 } = require("./controllers/validators/auth.validation");
 const { appStarter } = require("./utils");
 const { getGoogleLogin, handleGoogleLogin } = require("./controllers/google.auth");
@@ -14,9 +14,20 @@ const { appendFile } = require("fs");
 const path = require("path");
 const { changePasswordController } = require("./controllers/auth.controller");
 const { verifyToken, checkIfAdmin } = require("./controllers/middlewares");
-const { fetchAllBooks, addBookController, findByNameController, updateBooksController, findRandomBookController } = require("./controllers/book.controller");
+const {
+	fetchAllBooks,
+	addBookController,
+	findByNameController,
+	updateBooksController,
+	findRandomBookController,
+  deleteBookController,
+} = require("./controllers/book.controller");
 const { seedSuperAdmin } = require("./controllers/seed");
-const { validatecreateBooksChangeSchema, validateupdateBooksChangeSchema } = require("./controllers/validators/books.validation");
+const {
+	validatecreateBooksChangeSchema,
+	validateupdateBooksChangeSchema,
+  validateGeneralSearchSchema,
+} = require("./controllers/validators/books.validation");
 
 const app = express();
 const port = process.env.PORT;
@@ -24,39 +35,30 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", indexController);
 
-// Email Authentication
+
+// Email Authentication and endpoint
+app.get("/", indexController);
+app.get("/books", fetchAllBooks);
+app.get("/books/:title", verifyToken, findByNameController);
 
 app.post("/signup", validateSignupMiddleware, authController.signupController);
 app.post("/login", validateLoginMiddleware, authController.loginController);
-app.put("/password",validatePasswordChangeMiddleware,verifyToken,changePasswordController)
+app.post("/books", validatecreateBooksChangeSchema, checkIfAdmin, addBookController);
+app.post("/search", verifyToken,validateGeneralSearchSchema, findRandomBookController);
 
+app.put("/books", checkIfAdmin, validateupdateBooksChangeSchema, updateBooksController);
+app.put("/password", validatePasswordChangeMiddleware, verifyToken, changePasswordController);
 
+app.delete("/books/:id", checkIfAdmin, deleteBookController);
 // Google Authentication
 
 // Redirect the user to the Google signin page
 
-app.get("/auth/google",  getGoogleLogin);
+app.get("/auth/google", getGoogleLogin);
 
 // Retrieve user data using the access token received
 
 app.get("/auth/google/callback", handleGoogleLogin);
-
-// profile route after successful sign in
-app.get("/profile", (req, res) => {
-  console.log(req);
-  res.send("Welcome");
-});
-
-
-app.get("/books", fetchAllBooks);
-app.post("/books",validatecreateBooksChangeSchema ,checkIfAdmin, addBookController);
-app.get("/books/:title", verifyToken, findByNameController);
-app.put("/books", checkIfAdmin, validateupdateBooksChangeSchema, updateBooksController);
-app.post("/search", verifyToken,findRandomBookController);
-
-
-
 
 app.listen(port, appStarter(port));

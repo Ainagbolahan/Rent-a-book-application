@@ -28,6 +28,7 @@ const {
 	validateupdateBooksChangeSchema,
   validateGeneralSearchSchema,
 } = require("./controllers/validators/books.validation");
+const { cartController } = require("./controllers/cart.controller");
 
 const app = express();
 const port = process.env.PORT;
@@ -51,6 +52,7 @@ app.put("/books", checkIfAdmin, validateupdateBooksChangeSchema, updateBooksCont
 app.put("/password", validatePasswordChangeMiddleware, verifyToken, changePasswordController);
 
 app.delete("/books/:id", checkIfAdmin, deleteBookController);
+app.post("/cart/:id", verifyToken, cartController);
 // Google Authentication
 
 // Redirect the user to the Google signin page

@@ -52,5 +52,27 @@ const createBooksChangeSchema = Joi.object({
     }
   };
 
+  // General book search
+const generalSearchSchema = Joi.object({
+  search: Joi.string().min(8).required(),
+});
 
-module.exports = { validatecreateBooksChangeSchema, validateupdateBooksChangeSchema };
+const validateGeneralSearchSchema = (req, res, next) => {
+  try {
+    let { error, value } = generalSearchSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        message: error,
+      });
+    }
+    // console.log(value);
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      message: "server issues",
+    });
+  }
+};
+
+
+module.exports = { validatecreateBooksChangeSchema, validateupdateBooksChangeSchema, validateGeneralSearchSchema };

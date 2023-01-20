@@ -13,7 +13,7 @@ const bookSchema = new Schema(
 	}
 );
 
-
+bookSchema.index({ "title": "text", "author": "text", "description": "text" });
 
 const Book = model("Book", bookSchema);
 module.exports = { Book };

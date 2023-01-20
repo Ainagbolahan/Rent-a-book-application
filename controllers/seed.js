@@ -1,7 +1,7 @@
 const { User } = require("../models/user.model");
 
 const seedSuperAdmin = async () => {
-    const superAdmin = await User.findOne({ email: "superadmingee@gmail.com",
+    const superAdmin = await User.findOne({ email: process.env.SUPERADMINEMAIL,
     });
     
     if (superAdmin) {

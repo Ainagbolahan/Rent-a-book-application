@@ -25,7 +25,8 @@ const addBookController = async (req, res) => {
 
 const fetchAllBooks = async (req, res) => {
 	try {
-		let books = await Book.find({});
+        let books = await Book.find({});
+        // console.log(books);
 		return res.status(200).json({
 			message: "Books fetched",
 			data: books,

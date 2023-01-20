@@ -29,6 +29,7 @@ const {
   validateGeneralSearchSchema,
 } = require("./controllers/validators/books.validation");
 const { cartController } = require("./controllers/cart.controller");
+const userAdminUpdate = require("./controllers/user.controller");
 
 const app = express();
 const port = process.env.PORT;
@@ -58,6 +59,8 @@ app.post("/cart/:id", verifyToken, cartController);
 // Redirect the user to the Google signin page
 
 app.get("/auth/google", getGoogleLogin);
+
+app.put("/updateUser", checkIfAdmin, userAdminUpdate);
 
 // Retrieve user data using the access token received
 
